@@ -42,8 +42,8 @@ async function sendRVM(phoneNumber, voicemailFile) {
 
   const formData = new FormData();
   formData.append("phone_number", phoneNumber);
-  formData.append("voicemail", fs.createReadStream(voicemailFile.path));
-
+  formData.append("recording_id", "4a57733e-30ab-43da-96a6-75e981e41fa9"); 
+  
   // Make the API request
   const response = await axios.post(url, formData, { headers });
 
