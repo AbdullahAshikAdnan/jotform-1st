@@ -1,3 +1,10 @@
+const express = require('express');
+const app = express();
+// Define route for the root URL
+app.get("/", (req, res) => {
+  res.send("Hello, Glitch!");
+});
+// Define route for JotForm webhook
 app.post("/jotform-webhook", upload.single("voicemail"), async (req, res) => {
   // Extract form data from JotForm submission
   const phoneNumber = req.body.input_5_phone;
