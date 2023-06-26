@@ -4,6 +4,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const axios = require('axios');
+const bodyParser = require('body-parser');
 const FormData = require('form-data');const express = require('express');
 
 // Configure middleware
