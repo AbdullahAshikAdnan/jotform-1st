@@ -65,6 +65,6 @@ async function sendRVM(phoneNumber, voicemailFile) {
 }
 
 // Start the server
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(10000, () => {
+  console.log("Server is running on port 10000");
 });
