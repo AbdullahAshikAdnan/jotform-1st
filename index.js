@@ -25,10 +25,9 @@ app.get("/", (req, res) => {
   res.send("Hello, Glitch!");
 });
 // Define route for JotForm webhook
-app.post("/jotform-webhook", upload.single("voicemail"), async (req, res) => {
+app.post("/jotform-webhook", async (req, res) => {
   // Extract form data from JotForm submission
   const phoneNumber = req.body.input_3;
-  const voicemailFile = req.file;
 
   // Perform any necessary validation on the form data
 
