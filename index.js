@@ -5,6 +5,20 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');const express = require('express');
+
+// Configure middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Configure JotForm API credentials
+const jotformApiKey = "27f50030f5db987ecbf9f985f47076ec";
+const jotformFormId = "231365209409051";
+const jotformApiUrl = "https://api.jotform.com";
+
+// Configure Drop Cowboy API credentials
+const dropCowboyTeamId = "acb1088b-e24d-4c61-bb83-cfb335d71892";
+const dropCowboySecretKey = "48db8265-f632-418b-b4f3-eb8c24aaef58";
+const dropCowboyApiUrl = "https://api.dropcowboy.com/v1/rvm";
+
 // Define route for the root URL
 app.get("/", (req, res) => {
   res.send("Hello, Glitch!");
