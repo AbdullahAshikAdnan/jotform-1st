@@ -35,7 +35,7 @@ app.post("/jotform-webhook", async (req, res) => {
 
   // Call function to send RVM
   try {
-    await sendRVM(phoneNumber, voicemailFile);
+    await sendRVM(phoneNumber, recordingId);
     res.status(200).json({ message: "RVM sent successfully" });
   } catch (error) {
     res.status(500).json({ error: "Failed to send RVM" });
@@ -43,7 +43,7 @@ app.post("/jotform-webhook", async (req, res) => {
 });
 
 // Function to send RVM
-async function sendRVM(phoneNumber, voicemailFile) {
+async function sendRVM(phoneNumber, recordingId) {
   // Use Axios to make API request to send RVM
   const endpoint = "https://api.dropcowboy.com/v1/rvm"; // Replace with the actual API endpoint
   const url = endpoint;
