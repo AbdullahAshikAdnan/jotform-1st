@@ -9,6 +9,7 @@ const FormData = require('form-data');const express = require('express');
 
 // Configure middleware
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Configure JotForm API credentials
 const jotformApiKey = "27f50030f5db987ecbf9f985f47076ec";
