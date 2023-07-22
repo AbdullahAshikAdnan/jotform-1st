@@ -52,7 +52,7 @@ async function sendRVM(phoneNumber, recordingId) {
   const headers = {
     "X-TeamID": dropCowboyTeamId,
     "X-SecretKey": dropCowboySecretKey,
-    "Content-Type": "multipart/form-data",
+    "Content-Type": "application/json",
   };
 
   const formData = new FormData();
