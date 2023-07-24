@@ -1,19 +1,19 @@
 const express = require('express');
 const app = express();
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const FormData = require('form-data');
+const path = require("path"); // Import the path module
 
 // Configure middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static("public"));
 
 // Configure JotForm API credentials
 const jotformApiKey = "27f50030f5db987ecbf9f985f47076ec";
-const jotformFormId = "231365209409051";
+const jotformFormId = "231094222617046";
 const jotformApiUrl = "https://api.jotform.com";
 
 // Configure Drop Cowboy API credentials
@@ -25,26 +25,35 @@ const dropCowboyApiUrl = "https://api.dropcowboy.com/v1/rvm";
 app.get("/", (req, res) => {
   res.send("Hello, Glitch!");
 });
+
 // Define route for JotForm webhook
 app.post("/jotform-webhook", async (req, res) => {
+  // Log the received form data and files for debugging
+  console.log('Received form data:', req.body);
+  
   // Extract form data from JotForm submission
-  const phoneNumber = req.body.input_3;
+  const phoneNumber = req.body["input_3"];
   const recordingId = "4a57733e-30ab-43da-96a6-75e981e41fa9";
 
-  // Perform any necessary validation on the form data
+  // Call the sendRVM function and store the result
+  const result = await sendRVM(phoneNumber, recordingId);
 
-  // Call function to send RVM
-  try {
-    await sendRVM(phoneNumber, recordingId);
-    res.status(200).json({ message: "RVM sent successfully" });
-  } catch (error) {
-    console.error("Error sending RVM:", error.message);
-    res.status(500).json({ error: "Failed to send RVM" });
+  // Check if the RVM was sent successfully
+  if (result.success) {
+    res.status(200).json({ message: result.message });
+  } else {
+    console.error("Error sending RVM:", result.message);
+    res.status(500).json({ error: "Failed to send RVM", details: result.message });
   }
 });
+  
+// Perform any necessary validation on the form data
 
 // Function to send RVM
 async function sendRVM(phoneNumber, recordingId) {
+  / Form the complete phone number in E.164 format (assuming the first 3 digits are the area code)
+  const phone_number_with_area_code = `+1${phoneNumber}`;
+  
   // Use Axios to make API request to send RVM
   const url = dropCowboyApiUrl;
 
@@ -54,26 +63,30 @@ async function sendRVM(phoneNumber, recordingId) {
     "X-SecretKey": dropCowboySecretKey,
     "Content-Type": "application/json",
   };
+  const payload = {
+    team_id: dropCowboyTeamId,
+    secret: dropCowboySecretKey,
+    phone_number: phone_number_with_area_code,
+    recording_id: recordingId,
+    branding_id: "fae66130-e5a1-4254-ba19-53971fc55df1",
+    foreign_id: "my_unique_foreign_id", // Replace with your system's ID
+  };
 
-  const formData = new FormData();
-  formData.append("phone_number", phoneNumber);
-  formData.append("recording_id", recordingId); 
-  
-  // Make the API request
-  const response = await axios.post(url, formData, {
-    headers: formData.getHeaders(), // Use getHeaders() to retrieve the correct headers for FormData
-    onUploadProgress: (progressEvent) => {
-      const progress = (progressEvent.loaded / progressEvent.total) * 100;
-      console.log(`Upload progress: ${progress.toFixed(2)}%`);
-    },
-  });
+  try {
+    const response = await axios.post(url, payload, { headers: headers });
+    console.log("RVM sent:", response.data);
 
-  // Handle the response as needed
-  console.log("RVM sent:", response.data);
+    // If successful, return a success message
+    return { success: true, message: "RVM sent successfully" };
+  } catch (error) {
+    console.error("Error sending RVM:", error.message);
+
+    // If an error occurs, return an error message
+    return { success: false, message: error.message };
+  }
 }
 
 // Start the server
-const port = 10000; // You can change the port here if needed
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });
