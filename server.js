@@ -5,6 +5,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const FormData = require('form-data');
 const path = require("path"); // Import the path module
+const keepAlive = require('express-keep-alive');
 
 // Configure middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,6 +21,11 @@ const jotformApiUrl = "https://api.jotform.com";
 const dropCowboyTeamId = "acb1088b-e24d-4c61-bb83-cfb335d71892";
 const dropCowboySecretKey = "48db8265-f632-418b-b4f3-eb8c24aaef58";
 const dropCowboyApiUrl = "https://api.dropcowboy.com/v1/rvm";
+
+// Use keep-alive middleware to keep the deploy active
+app.use(keepAlive({
+  ttl: 60, // 1 minute
+}));
 
 // Define route for the root URL
 app.get("/", (req, res) => {
