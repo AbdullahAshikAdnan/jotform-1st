@@ -51,7 +51,7 @@ app.post("/jotform-webhook", async (req, res) => {
 
 // Function to send RVM
 async function sendRVM(phoneNumber, recordingId) {
-  / Form the complete phone number in E.164 format (assuming the first 3 digits are the area code)
+  // Form the complete phone number in E.164 format (assuming the first 3 digits are the area code)
   const phone_number_with_area_code = `+1${phoneNumber}`;
   
   // Use Axios to make API request to send RVM
